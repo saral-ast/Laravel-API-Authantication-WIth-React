@@ -10,6 +10,7 @@ import {
   clearError,
 } from "../store/authSlice";
 import axios from "../services/api";
+import Cookies from "js-cookie";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -51,8 +52,8 @@ const Login = () => {
 
       if (response.data.type === "success") {
         // Store token and user data
-        localStorage.setItem("token", response.data.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.data.user));
+       Cookies.set("token", response.data.data.token);
+        Cookies.set("user", JSON.stringify(response.data.data.user));
 
         // Set axios default header for future requests
         axios.defaults.headers.common[

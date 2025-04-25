@@ -1,18 +1,26 @@
 import axios from "../services/api";
 import { logout } from "../store/authSlice";
 
+
+
 // Function to handle user logout
-export const handleLogout = (dispatch, navigate) => {
+export const handleLogout = async (dispatch, navigate) => {
   // Clear token from axios headers
-  delete axios.defaults.headers.common["Authorization"];
+   const response = await axios.delete("/api/logout");
+      console.log(response);
 
-  // Dispatch logout action to clear Redux state
-  dispatch(logout());
+      if (response.data.type === "success") {
+         delete axios.defaults.headers.common["Authorization"];
 
-  // Redirect to login page
-  if (navigate) {
-    navigate("/login");
-  }
+         // Dispatch logout action to clear Redux state
+         dispatch(logout());
+
+         // Redirect to login page
+         if (navigate) {
+           navigate("/login");
+         }
+      }
+  
 };
 
 // Function to initialize auth state from localStorage

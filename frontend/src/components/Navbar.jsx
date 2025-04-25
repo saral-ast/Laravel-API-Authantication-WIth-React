@@ -1,20 +1,26 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
-import { Link, useNavigate } from 'react-router';
+import React from "react";
+import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "../services/api";
+import Cookies from "js-cookie";
 
 const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    // Clear the token from localStorage
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    
-    // Update the state
-    setIsLoggedIn(false);
-    
-    // Redirect to login page
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      const response = await axios.delete("/logout");
+      console.log(response);
+
+      if (response.data.type === "success") {
+        Cookies.remove("token");
+        Cookies.remove("user");
+        setIsLoggedIn(false);
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   return (
